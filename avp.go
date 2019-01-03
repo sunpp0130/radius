@@ -90,10 +90,12 @@ var avpBinary avpBinaryt
 type avpBinaryt struct{}
 
 func (s avpBinaryt) Value(p *Packet, a AVP) interface{} {
-	return a.Value
+	//return a.Value
+	return uint32(binary.BigEndian.Uint32(a.Value))
 }
 func (s avpBinaryt) String(p *Packet, a AVP) string {
-	return fmt.Sprintf("%#v", a.Value)
+	//return fmt.Sprintf("%#v", a.Value)
+	return strconv.Itoa(int(binary.BigEndian.Uint32(a.Value)))
 }
 
 var avpPassword avpPasswordt

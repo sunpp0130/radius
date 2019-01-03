@@ -268,6 +268,14 @@ func (p *Packet) GetNasIpAddress() (ip net.IP) {
 	}
 	return avp.Decode(p).(net.IP)
 }
+//add
+func (p *Packet) GetFramedIpAddress() (ip net.IP) {
+	avp := p.GetAVP(FramedIPAddress)
+	if avp == nil {
+		return nil
+	}
+	return avp.Decode(p).(net.IP)
+}
 
 func (p *Packet) GetAcctStatusType() AcctStatusTypeEnum {
 	avp := p.GetAVP(AcctStatusType)
@@ -311,12 +319,56 @@ func (p *Packet) GetAcctTotalInputOctets() uint64 {
 	return out
 }
 
+//add
+func (p *Packet) GetAcctOutputGigawords() uint32 {
+	avp := p.GetAVP(AcctOutputGigawords)
+	if avp != nil {
+		return 0
+	}
+	return avp.Decode(p).(uint32)
+}
+//add
+func (p *Packet) GetAcctInputGigawords() uint32 {
+	avp := p.GetAVP(AcctInputGigawords)
+	if avp != nil {
+		return 0
+	}
+	return avp.Decode(p).(uint32)
+}
 // it is ike_id in strongswan client
 func (p *Packet) GetNASPort() uint32 {
 	avp := p.GetAVP(NASPort)
 	if avp == nil {
 		return 0
 	}
+	return avp.Decode(p).(uint32)
+}
+//add
+func (p *Packet) GetNASPortId() string {
+	avp := p.GetAVP(NASPortId)
+	if avp == nil {
+		return ""
+	}
+	return avp.Decode(p).(string)
+}
+//add
+func (p *Packet) GetFramedProtocol() uint32 {
+	avp := p.GetAVP(FramedProtocol)
+	if avp == nil {
+		return 0
+	}
+	return avp.Decode(p).(uint32)
+}
+
+//add
+func (p *Packet) GetEventTimestamp() uint32 {
+	avp := p.GetAVP(EventTimestamp)
+	if avp == nil {
+		return 0 
+	}
+	//var uInt32 uint32
+        //uInt32 := binary.BigEndian.Uint32(avp.Decode(p))
+        //return uInt32
 	return avp.Decode(p).(uint32)
 }
 
