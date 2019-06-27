@@ -379,7 +379,6 @@ func (p *Packet) GetNASIdentifier() string {
 	}
 	return avp.Decode(p).(string)
 }
-
 func (p *Packet) GetEAPMessage() *EapPacket {
 	avp := p.GetAVP(EAPMessage)
 	if avp == nil {
@@ -387,3 +386,83 @@ func (p *Packet) GetEAPMessage() *EapPacket {
 	}
 	return avp.Decode(p).(*EapPacket)
 }
+//add for RFC3162
+func (p *Packet) GetNasIpv6Address() (ip net.IP) {
+	avp := p.GetAVP(NASIPv6Address)
+	if avp == nil {
+		return nil
+	}
+	return avp.Decode(p).(net.IP)
+}
+func (p *Packet) GetFramedInterfaceId() string {
+	avp := p.GetAVP(FramedInterfaceId)
+	if avp == nil {
+		return ""
+	}
+	return avp.Decode(p).(string)
+}
+func (p *Packet) GetFramedIPv6Prefix() (value *net.IPNet) {
+	avp := p.GetAVP(FramedIPv6Prefix)
+	if avp == nil {
+		return nil
+	}
+	return avp.Decode(p).(net.IPNet)
+}
+func (p *Packet) GetLoginIPv6Host() (ip net.IP) {
+	avp := p.GetAVP(LoginIPv6Host)
+	if avp == nil {
+		return nil
+	}
+	return avp.Decode(p).(net.IP)
+}
+func (p *Packet) GetFramedIPv6Route() string {
+	avp := p.GetAVP(FramedIPv6Route)
+	if avp == nil {
+		return ""
+	}
+	return avp.Decode(p).(string)
+}
+func (p *Packet) GetFramedIPv6Pool() string {
+	avp := p.GetAVP(FramedIPv6Pool)
+	if avp == nil {
+		return ""
+	}
+	return avp.Decode(p).(string)
+}
+//add for RFC6911
+func (p *Packet) GetFramedIPv6Address() (ip net.IP) {
+	avp := p.GetAVP(FramedIPv6Address)
+	if avp == nil {
+		return nil
+	}
+	return avp.Decode(p).(net.IP)
+}
+func (p *Packet) GetDNSServerIPv6Address() (ip net.IP) {
+	avp := p.GetAVP(DNSServerIPv6Address)
+	if avp == nil {
+		return nil
+	}
+	return avp.Decode(p).(net.IP)
+}
+func (p *Packet) GetRouteIPv6Information() (value *net.IPNet) {
+	avp := p.GetAVP(RouteIPv6Information)
+	if avp == nil {
+		return nil
+	}
+	return avp.Decode(p).(net.IPNet)
+}
+func (p *Packet) GetDelegatedIPv6PrefixPool() string {
+	avp := p.GetAVP(DelegatedIPv6PrefixPool)
+	if avp == nil {
+		return ""
+	}
+	return avp.Decode(p).(string)
+}
+func (p *Packet) GetStatefulIPv6AddressPool() string {
+	avp := p.GetAVP(StatefulIPv6AddressPool)
+	if avp == nil {
+		return ""
+	}
+	return avp.Decode(p).(string)
+}
+
