@@ -179,6 +179,12 @@ const (
 	ImplementationSpecificEnd   AttributeType = 240
 	ReservedStart               AttributeType = 241
 	ReservedEnd                 AttributeType = 254
+
+	FramedIPv6Address 	    AttributeType = 168
+	DNSServerIPv6Address        AttributeType = 169 
+	RouteIPv6Information        AttributeType = 170
+	DelegatedIPv6PrefixPool     AttributeType = 171
+	StatefulIPv6AddressPool     AttributeType = 172
 )
 
 func getAttributeTypeDesc(t AttributeType) attributeTypeDesc {
