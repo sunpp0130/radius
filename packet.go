@@ -401,7 +401,7 @@ func (p *Packet) GetFramedInterfaceId() string {
 	}
 	return avp.Decode(p).(string)
 }
-func (p *Packet) GetFramedIPv6Prefix() (value *net.IPNet) {
+func (p *Packet) GetFramedIPv6Prefix() (ipnet net.IPNet) {
 	avp := p.GetAVP(FramedIPv6Prefix)
 	if avp == nil {
 		return nil
@@ -444,7 +444,7 @@ func (p *Packet) GetDNSServerIPv6Address() (ip net.IP) {
 	}
 	return avp.Decode(p).(net.IP)
 }
-func (p *Packet) GetRouteIPv6Information() (value *net.IPNet) {
+func (p *Packet) GetRouteIPv6Information() (ipnet net.IPNet) {
 	avp := p.GetAVP(RouteIPv6Information)
 	if avp == nil {
 		return nil
