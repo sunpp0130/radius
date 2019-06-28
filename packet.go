@@ -401,12 +401,12 @@ func (p *Packet) GetFramedInterfaceId() string {
 	}
 	return avp.Decode(p).(string)
 }
-func (p *Packet) GetFramedIPv6Prefix() (ipnet net.IPNet) {
+func (p *Packet) GetFramedIPv6Prefix() *avpIPPrefixt {
 	avp := p.GetAVP(FramedIPv6Prefix)
 	if avp == nil {
 		return nil
 	}
-	return avp.Decode(p).(net.IPNet)
+	return avp.Decode(p).(*avpIPPrefixt)
 }
 func (p *Packet) GetLoginIPv6Host() (ip net.IP) {
 	avp := p.GetAVP(LoginIPv6Host)
@@ -444,12 +444,12 @@ func (p *Packet) GetDNSServerIPv6Address() (ip net.IP) {
 	}
 	return avp.Decode(p).(net.IP)
 }
-func (p *Packet) GetRouteIPv6Information() (ipnet net.IPNet) {
+func (p *Packet) GetRouteIPv6Information() *avpIPPrefixt {
 	avp := p.GetAVP(RouteIPv6Information)
 	if avp == nil {
 		return nil
 	}
-	return avp.Decode(p).(net.IPNet)
+	return avp.Decode(p).(*avpIPPrefixt)
 }
 func (p *Packet) GetDelegatedIPv6PrefixPool() string {
 	avp := p.GetAVP(DelegatedIPv6PrefixPool)

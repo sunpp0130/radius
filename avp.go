@@ -74,6 +74,35 @@ func (s avpIPt) String(p *Packet, a AVP) string {
 	return net.IP(a.Value).String()
 }
 
+var avpIPPrefix avpIPPrefixt
+
+type avpIPPrefixt struct{}
+
+func (s avpIPPrefixt) Value(p *Packet, a AVP) interface{} {
+	buff := a.Value
+	prefixLength := int(buff[1])
+	ip := make(net.IP, net.IPv6len)
+	copy(ip, buff[2:])
+	if i := uint(prefixLength % 8); i != 0 {
+		for ; i < 8; i++ {
+			ip[prefixLength/8] &^= 1 << (7 - i)
+		}
+	}
+	return net.IP(ip)
+}
+func (s avpIPPrefixt) String(p *Packet, a AVP) string {
+	buff := a.Value
+	prefixLength := int(buff[1])
+	ip := make(net.IP, net.IPv6len)
+	copy(ip, buff[2:])
+	if i := uint(prefixLength % 8); i != 0 {
+		for ; i < 8; i++ {
+			ip[prefixLength/8] &^= 1 << (7 - i)
+		}
+	}
+	return net.IP(ip).String()
+}
+
 var avpUint32 avpUint32t
 
 type avpUint32t struct{}
