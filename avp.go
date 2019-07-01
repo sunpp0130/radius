@@ -88,7 +88,9 @@ func (s avpIPPrefixt) Value(p *Packet, a AVP) interface{} {
 			ip[prefixLength/8] &^= 1 << (7 - i)
 		}
 	}
-	return net.IP(ip)
+	ipstr := net.IP(ip).String()
+	ipstr += "/" + strconv.Itoa(prefixLength)
+	return ipstr
 }
 func (s avpIPPrefixt) String(p *Packet, a AVP) string {
 	buff := a.Value
@@ -100,7 +102,9 @@ func (s avpIPPrefixt) String(p *Packet, a AVP) string {
 			ip[prefixLength/8] &^= 1 << (7 - i)
 		}
 	}
-	return net.IP(ip).String()
+	ipstr := net.IP(ip).String()
+	ipstr += "/" + strconv.Itoa(prefixLength)
+	return ipstr
 }
 
 var avpUint32 avpUint32t
@@ -125,6 +129,19 @@ func (s avpBinaryt) Value(p *Packet, a AVP) interface{} {
 func (s avpBinaryt) String(p *Packet, a AVP) string {
 	//return fmt.Sprintf("%#v", a.Value)
 	return strconv.Itoa(int(binary.BigEndian.Uint32(a.Value)))
+}
+
+var avpBBinary avpBBinaryt
+
+type avpBBinaryt struct{}
+
+func (s avpBBinaryt) Value(p *Packet, a AVP) interface{} {
+	buff := a.Value
+	return fmt.Sprintf("%x%x%x%x%x%x%x%x", buff[0],buff[1],buff[2],buff[3],buff[4],buff[5],buff[6],buff[7])
+}
+func (s avpBBinaryt) String(p *Packet, a AVP) string {
+	buff := a.Value
+	return fmt.Sprintf("%x%x%x%x%x%x%x%x", buff[0],buff[1],buff[2],buff[3],buff[4],buff[5],buff[6],buff[7])
 }
 
 var avpPassword avpPasswordt
