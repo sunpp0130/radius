@@ -476,3 +476,133 @@ func (p *Packet) GetDelegatedIPv6Prefix() string {
 	}
 	return avp.Decode(p).(string)
 }
+//vendor part
+func (p *Packet) GetVendornumber() uint32 {
+	avp := p.GetAVP(VendorSpecific)
+	return binary.BigEndian.Uint32(avp.Value[0:4])
+}
+
+func (p *Packet) Gethuawei() string {
+	avp:= p.GetAVP(VendorSpecific)
+	Attr := uint8(0)
+	Len  := uint8(0)
+	var offset uint8
+	var SLen uint8
+        SLen = uint8(len(avp.Value)) - 4
+	startport := uint32(0)	
+	stopport := uint32(0)
+	inrate	:= uint32(0)
+	outrate	:= uint32(0)
+	out := uint64(0)
+	in := uint64(0)
+	offset = 4
+	for (SLen > 0) {
+		Attr = uint8(avp.Value[offset])
+		offset = offset + 1
+		Len = uint8(avp.Value[offset])
+		offset = offset + 1
+		switch Attr {
+			case 2:
+				inrate = binary.BigEndian.Uint32(avp.Value[offset:(offset+Len-2)])
+			case 5:
+				outrate = binary.BigEndian.Uint32(avp.Value[offset:(offset+Len-2)])
+			case 144:
+				in += uint64(binary.BigEndian.Uint32(avp.Value[offset:(offset+Len-2)]))
+			case 145:
+				out += uint64(binary.BigEndian.Uint32(avp.Value[offset:(offset+Len-2)]))
+			case 148:
+				in += uint64(binary.BigEndian.Uint32(avp.Value[offset:(offset+Len-2)]))<<32
+			case 149:
+				out += uint64(binary.BigEndian.Uint32(avp.Value[offset:(offset+Len-2)]))<<32
+			case 162:
+				startport = binary.BigEndian.Uint32(avp.Value[offset:(offset+Len-2)])
+			case 163:
+				stopport = binary.BigEndian.Uint32(avp.Value[offset:(offset+Len-2)])
+			//default:
+			//	panic("unrecognized number")
+		}
+		offset = offset + Len - 2
+		SLen = SLen - Len  	
+	}
+	return fmt.Sprintf("%d|%d|%d|%d|%d|%d",startport,stopport,inrate,outrate,in,out)
+}
+
+func (p *Packet) GetZTC_startport() string {
+	avp := p.GetAVP(VendorSpecific)
+	Attr := uint8(avp.Value[4])
+	Len := uint8(avp.Value[5])
+	startport := uint32(0)
+	if Attr == 99 {
+		startport = binary.BigEndian.Uint32(avp.Value[6:(6+Len-2)])
+	}
+	return fmt.Sprintf("%d",startport)
+}
+
+func (p *Packet) GetZTC_stopport() string {
+	avp := p.GetAVP(VendorSpecific)
+	Attr := uint8(avp.Value[4])
+	Len := uint8(avp.Value[5])
+	stopport := uint32(0)
+	if Attr == 100 {
+		stopport = binary.BigEndian.Uint32(avp.Value[6:(6+Len-2)])
+	}
+	return fmt.Sprintf("%d",stopport)
+}
+
+func (p *Packet) GetZTC_inlow() uint64 {
+	in := uint64(0)
+	avp := p.GetAVP(VendorSpecific)
+	Attr := uint8(avp.Value[4])
+	Len := uint8(avp.Value[5])
+	if Attr == 245 {
+		in += uint64(binary.BigEndian.Uint32(avp.Value[6:(6+Len-2)]))
+	}
+	return in
+}
+
+func (p *Packet) GetZTC_inhigh() uint64 {
+	in := uint64(0)
+	avp := p.GetAVP(VendorSpecific)
+	Attr := uint8(avp.Value[4])
+	Len := uint8(avp.Value[5])
+	if Attr == 246 {
+		in += uint64(binary.BigEndian.Uint32(avp.Value[6:(6+Len-2)]))<<32
+	}
+	return in
+}
+
+func (p *Packet) GetZTC_inall() uint64 {
+	in := uint64(0)
+	in += p.GetZTC_inlow() 
+	in += p.GetZTC_inhigh() 
+	return in
+}
+
+func (p *Packet) GetZTC_outlow() uint64 {
+	out := uint64(0)
+	avp := p.GetAVP(VendorSpecific)
+	Attr := uint8(avp.Value[4])
+	Len := uint8(avp.Value[5])
+	if Attr == 247 {
+		out += uint64(binary.BigEndian.Uint32(avp.Value[6:(6+Len-2)]))
+	}
+	return out
+}
+
+func (p *Packet) GetZTC_outhigh() uint64 {
+	out := uint64(0)
+	avp := p.GetAVP(VendorSpecific)
+	Attr := uint8(avp.Value[4])
+	Len := uint8(avp.Value[5])
+	if Attr == 248 {
+		out += uint64(binary.BigEndian.Uint32(avp.Value[6:(6+Len-2)]))<<32
+	}
+	return out
+}
+
+func (p *Packet) GetZTC_outall() uint64 {
+	out := uint64(0)
+	out += p.GetZTC_outlow() 
+	out += p.GetZTC_outhigh() 
+	return out
+}

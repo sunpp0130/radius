@@ -17,7 +17,7 @@ var avpVendor avpVendort
 type avpVendort struct{}
 
 func (s avpVendort) Value(p *Packet, a AVP) interface{} {
-	// as-is
+
 	return a.Value
 }
 
