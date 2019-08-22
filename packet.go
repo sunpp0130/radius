@@ -479,6 +479,9 @@ func (p *Packet) GetDelegatedIPv6Prefix() string {
 //vendor part
 func (p *Packet) GetVendornumber() uint32 {
 	avp := p.GetAVP(VendorSpecific)
+	if avp == nil {
+		return 0
+	}
 	return binary.BigEndian.Uint32(avp.Value[0:4])
 }
 
